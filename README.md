@@ -291,9 +291,8 @@ and persistence stay untouched.
 
 | Route | Purpose |
 |---|---|
-| `/` | Romanian airports (default) |
-| `/?scope=europe` | country picker |
-| `/?scope=europe&country=DE` | airports in one country |
+| `/` | airports in Romania, the default tab |
+| `/?country=DE` | airports in another country |
 | `/airports/{icao}` | terminals, gates and the flight board |
 | `/airports/{icao}?date=YYYY-MM-DD&board=departures` | a specific day and board |
 | `POST /airports/{icao}/collect` | pull that airport-day from OpenSky |

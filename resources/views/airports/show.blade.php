@@ -26,7 +26,7 @@
         ], fn ($value) => $value !== null);
     @endphp
 
-    <a href="{{ route('home', ['scope' => 'europe', 'country' => $airport->country_code]) }}"
+    <a href="{{ route('home', ['country' => $airport->country_code]) }}"
        class="mb-6 inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-sky-600 dark:text-slate-400">
         <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
         All {{ $airport->country_name }} airports

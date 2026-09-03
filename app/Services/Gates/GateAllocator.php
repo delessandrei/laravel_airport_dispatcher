@@ -67,7 +67,6 @@ final class GateAllocator
         }
 
         // Earliest demand first, flight id to break ties, so the result is
-        // reproducible rather than dependent on how the rows came out of Mongo.
         usort($demands, fn (array $a, array $b) => [$a['from']->getTimestamp(), $a['flight_id']]
             <=> [$b['from']->getTimestamp(), $b['flight_id']]);
 

@@ -53,17 +53,18 @@ class AirportBrowsingTest extends TestCase
             ->assertDontSee('EDDF');
     }
 
-    public function test_europe_scope_offers_a_country_picker(): void
+    public function test_every_country_has_its_own_tab(): void
     {
-        $this->get('/?scope=europe')
+        $this->get('/')
             ->assertOk()
-            ->assertSee('Select a country')
-            ->assertSee('Germany');
+            ->assertSee('country=RO', escape: false)
+            ->assertSee('country=DE', escape: false)
+            ->assertSee('country=GB', escape: false);
     }
 
     public function test_selecting_a_country_lists_only_its_airports(): void
     {
-        $this->get('/?scope=europe&country=DE')
+        $this->get('/?country=DE')
             ->assertOk()
             ->assertSee('EDDF')
             ->assertDontSee('LROP');
@@ -71,7 +72,7 @@ class AirportBrowsingTest extends TestCase
 
     public function test_an_unknown_country_falls_back_to_romania(): void
     {
-        $this->get('/?scope=europe&country=ZZ')
+        $this->get('/?country=ZZ')
             ->assertOk()
             ->assertDontSee('EDDF');
     }

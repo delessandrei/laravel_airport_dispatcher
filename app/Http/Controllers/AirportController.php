@@ -22,36 +22,28 @@ use Illuminate\View\View;
 class AirportController extends Controller
 {
     /** Countries covered by this proof of concept. */
+    /** Country code => [tab label, full name]. Romania is the default tab. */
     private const COUNTRIES = [
-        'RO' => 'Romania',
-        'DE' => 'Germany',
-        'GB' => 'United Kingdom',
+        'RO' => ['RO', 'Romania'],
+        'DE' => ['DE', 'Germany'],
+        'GB' => ['UK', 'United Kingdom'],
     ];
 
     public function index(Request $request): View
     {
-        $scope = $request->query('scope') === 'europe' ? 'europe' : 'romania';
-
-        $country = strtoupper((string) $request->query('country', ''));
-        $country = array_key_exists($country, self::COUNTRIES) ? $country : null;
-
-        // Romania is the default view; Europe asks for a country first.
-        $selected = $scope === 'romania' ? 'RO' : $country;
-
-        $airports = $selected
-            ? Airport::inCountry($selected)->orderBy('city')->get()
-            : collect();
-
+        // One tab per country, Romania first. An unknown code falls back to it
+        // rather than showing an empty page.
+        $country = strtoupper((string) $request->query('country', 'RO'));
+        $country = array_key_exists($country, self::COUNTRIES) ? $country : 'RO';
 
         $counts = Airport::raw(fn ($collection) => $collection->aggregate([
             ['$group' => ['_id' => '$country_code', 'total' => ['$sum' => 1]]],
         ]))->pluck('total', '_id');
 
         return view('home', [
-            'scope' => $scope,
             'countries' => self::COUNTRIES,
-            'selectedCountry' => $selected,
-            'airports' => $airports,
+            'selectedCountry' => $country,
+            'airports' => Airport::inCountry($country)->orderBy('city')->get(),
             'counts' => $counts,
         ]);
     }
